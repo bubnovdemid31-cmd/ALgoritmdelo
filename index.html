@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Алгоритм.Дело — разработка сайтов и ботов</title>
+    <!-- EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <style>
+        /* ===== ОБНУЛЕНИЕ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f7fbf8;
+            color: #1e2e2a;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            padding: 0 20px;
+            margin: 0 auto;
+        }
+
+        /* ===== ХЕДЕР ===== */
+        header {
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0 2px 20px rgba(60, 110, 80, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 14px 0;
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a4a3a;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #3a7a5a;
+            font-weight: 300;
+        }
+
+        .nav {
+            display: flex;
+            gap: 28px;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #1e3a32;
+            font-size: 17px;
+            transition: 0.2s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+
+        .nav a:hover {
+            color: #2b7a4e;
+            border-bottom-color: #6faf8a;
+        }
+
+        .btn-outline {
+            border: 2px solid #3a7a5a;
+            color: #1a4a3a;
+            background: transparent;
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline:hover {
+            background: #3a7a5a;
+            color: #ffffff;
+        }
+
+        .btn-primary {
+            background: #2d6b4a;
+            color: #ffffff;
+            border: none;
+            padding: 12px 34px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.25s;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 6px 18px rgba(45, 107, 74, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: #1f543a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(45, 107, 74, 0.35);
+        }
+
+        /* ===== ГЕРОЙ ===== */
+        .hero {
+            padding: 60px 0 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 700;
+            color: #0e2f24;
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 span {
+            color: #2b7a4e;
+        }
+
+        .hero p {
+            font-size: clamp(18px, 2vw, 24px);
+            color: #2b4a3e;
+            max-width: 720px;
+            margin: 0 auto 28px;
+            opacity: 0.85;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        /* ===== СЕКЦИИ ===== */
+        section {
+            width: 100%;
+            padding: 50px 0 40px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 44px);
+            font-weight: 700;
+            color: #0e2f24;
+            margin-bottom: 28px;
+            text-align: center;
+        }
+
+        .section-sub {
+            text-align: center;
+            font-size: 18px;
+            color: #3b5f4e;
+            max-width: 700px;
+            margin: -10px auto 40px;
+        }
+
+        /* ===== О НАС ===== */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px 60px;
+            align-items: start;
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 40px 44px;
+            box-shadow: 0 8px 30px rgba(50, 100, 70, 0.06);
+        }
+
+        .about-text {
+            font-size: 17px;
+            color: #1e3a30;
+        }
+
+        .about-text p {
+            margin-bottom: 18px;
+        }
+
+        .about-slogans {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-left: 10px;
+            border-left: 4px solid #6faf8a;
+        }
+
+        .about-slogans blockquote {
+            font-size: 20px;
+            font-weight: 500;
+            color: #17412e;
+            font-style: italic;
+        }
+
+        .about-slogans blockquote small {
+            display: block;
+            font-weight: 400;
+            font-size: 16px;
+            color: #3d7257;
+            margin-top: 2px;
+            font-style: normal;
+        }
+
+        @media (max-width: 820px) {
+            .about-grid {
+                grid-template-columns: 1fr;
+                padding: 28px 22px;
+                gap: 28px;
+            }
+            .about-slogans {
+                border-left: none;
+                padding-left: 0;
+                border-top: 3px solid #6faf8a;
+                padding-top: 24px;
+            }
+        }
+
+        /* ===== ТОВАРЫ ===== */
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 28px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 22px 28px;
+            box-shadow: 0 4px 18px rgba(40, 80, 60, 0.05);
+            transition: 0.25s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(80, 140, 110, 0.08);
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 40px rgba(50, 110, 80, 0.10);
+            border-color: #b8dac8;
+        }
+
+        .product-card h3 {
+            font-size: 22px;
+            color: #0e2f24;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1f6a44;
+            margin: 10px 0 12px;
+        }
+
+        .product-price small {
+            font-weight: 400;
+            font-size: 16px;
+            color: #4d7a62;
+        }
+
+        .product-desc {
+            color: #2b4a3a;
+            font-size: 15px;
+            flex: 1;
+            margin-bottom: 18px;
+        }
+
+        .product-card .btn-primary {
+            width: 100%;
+            text-align: center;
+            padding: 12px 0;
+            font-size: 15px;
+            box-shadow: none;
+        }
+
+        .product-card .btn-primary:hover {
+            transform: none;
+        }
+
+        /* ===== МОДАЛЬНЫЕ ОКНА ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 45, 35, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #ffffff;
+            max-width: 640px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 36px;
+            padding: 36px 38px;
+            box-shadow: 0 40px 80px rgba(0, 20, 10, 0.3);
+            animation: fadeUp 0.25s ease;
+            position: relative;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: scale(0.96) translateY(16px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: sticky;
+            top: 0;
+            float: right;
+            background: #eaf3ee;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 60px;
+            font-size: 24px;
+            line-height: 42px;
+            text-align: center;
+            cursor: pointer;
+            color: #1f4a36;
+            transition: 0.2s;
+            margin-top: -10px;
+            margin-right: -10px;
+            font-weight: 300;
+        }
+
+        .modal-close:hover {
+            background: #cde0d4;
+        }
+
+        .modal h2 {
+            font-size: 30px;
+            color: #0e2f24;
+            margin: 8px 0 6px;
+        }
+
+        .modal .modal-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1f6a44;
+            margin-bottom: 16px;
+        }
+
+        .modal .modal-full-desc {
+            font-size: 16px;
+            color: #1f3f32;
+            white-space: pre-wrap;
+            margin-bottom: 22px;
+            line-height: 1.7;
+            border-top: 1px solid #d5e8dd;
+            padding-top: 18px;
+        }
+
+        .modal .btn-primary {
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+
+        /* ===== ФОРМА ЗАЯВКИ ===== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #1e3f30;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #d5e8dd;
+            border-radius: 16px;
+            font-size: 16px;
+            background: #fafffc;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3a8a5e;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(58, 138, 94, 0.10);
+        }
+
+        .form-group select {
+            appearance: auto;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 540px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            .modal {
+                padding: 26px 18px;
+            }
+        }
+
+        /* ===== КОНТАКТЫ ===== */
+        .contacts-block {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 32px 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px 40px;
+            box-shadow: 0 4px 16px rgba(40, 80, 60, 0.04);
+        }
+
+        .contacts-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            color: #1a3a2e;
+        }
+
+        .contacts-item a {
+            color: #1a5a3e;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contacts-item a:hover {
+            text-decoration: underline;
+        }
+
+        .contacts-item .icon {
+            font-size: 22px;
+        }
+
+        .contacts-tags {
+            display: flex;
+            gap: 12px;
+        }
+
+        .contacts-tags span {
+            background: #e2f0e8;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 14px;
+            color: #1a4a3a;
+        }
+
+        /* ===== ФУТЕР ===== */
+        footer {
+            width: 100%;
+            padding: 30px 0 18px;
+            border-top: 1px solid #d2e6da;
+            margin-top: 20px;
+            text-align: center;
+            color: #3d6a53;
+            font-size: 15px;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 768px) {
+            .header-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .nav {
+                justify-content: center;
+                gap: 16px;
+            }
+            .nav a {
+                font-size: 15px;
+            }
+            .logo {
+                text-align: center;
+                font-size: 26px;
+            }
+            .hero h1 {
+                font-size: 34px;
+            }
+            .catalog-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .contacts-block {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 24px 20px;
+            }
+            .contacts-tags {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .catalog-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav {
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+            .container {
+                padding: 0 14px;
+            }
+            .product-card {
+                padding: 18px 16px 22px;
+            }
+            .about-grid {
+                padding: 20px 16px;
+            }
+            .modal {
+                padding: 22px 14px;
+            }
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== ХЕДЕР ===== -->
+    <header>
+        <div class="container header-inner">
+            <div class="logo">Алгоритм.<span>Дело</span></div>
+            <nav class="nav">
+                <a href="#about">О нас</a>
+                <a href="#catalog">Услуги</a>
+                <a href="#contacts">Контакты</a>
+                <a href="#" class="btn-outline" onclick="openOrderModal(); return false;">Заявка</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===== ГЕРОЙ ===== -->
+    <section class="hero container">
+        <h1>Пишем алгоритмы.<br><span>Делаем дело.</span></h1>
+        <p>Разработка сайтов, Telegram-ботов, сложных систем и игр на Unity. Без магии — только логика и результат.</p>
+        <div class="hero-buttons">
+            <a href="#catalog" class="btn-primary">Смотреть услуги</a>
+            <a href="#" class="btn-outline" onclick="openOrderModal(); return false;">Оставить заявку</a>
+        </div>
+    </section>
+
+    <!-- ===== О НАС ===== -->
+    <section id="about">
+        <div class="container">
+            <h2 class="section-title">О нас</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p><strong>Мы не из тех, кто продаёт «сайт за час» или «бот-конструктор».</strong> Для нас алгоритм — это не просто строчки кода. Это логика, по которой живёт ваш бизнес: как приходит клиент, как он общается с системой, как он возвращается снова.</p>
+                    <p>А <strong>дело</strong> — это ваш результат. Не «сделали и забыли», а «запустили и масштабируем». Мы отвечаем за то, чтобы сложные технические решения приносили простые и понятные деньги.</p>
+                    <p>В нашей работе нет места магии. Есть чёткая схема: <strong>Анализ → Архитектура → Код → Поддержка.</strong> Всё остальное — лишний шум, который мы отсекаем.</p>
+                </div>
+                <div class="about-slogans">
+                    <blockquote>«Код — это просто.<br><small>Дело — в подходе.»</small></blockquote>
+                    <blockquote>«Не генерируем шум.<br><small>Строим системы.»</small></blockquote>
+                    <blockquote>«От сложной логики —<br><small>к простой прибыли.»</small></blockquote>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== КАТАЛОГ ===== -->
+    <section id="catalog">
+        <div class="container">
+            <h2 class="section-title">Услуги</h2>
+            <p class="section-sub">Выберите решение под вашу задачу. Каждый продукт — это готовый инструмент для вашего бизнеса.</p>
+            <div class="catalog-grid" id="catalogGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== КОНТАКТЫ ===== -->
+    <section id="contacts">
+        <div class="container">
+            <h2 class="section-title">Контакты</h2>
+            <div class="contacts-block">
+                <div class="contacts-item">
+                    <span class="icon">Тел:</span>
+                    <a href="tel:89642314605">8 964 231 46 05</a>
+                    <span style="color:#4d7a62; font-size:14px; margin-left:4px;">(WhatsApp, Telegram, MAX)</span>
+                </div>
+                <div class="contacts-item">
+                    <span class="icon">Почта:</span>
+                    <a href="mailto:bubnovdemid31@gmail.com">bubnovdemid31@gmail.com</a>
+                </div>
+                <div class="contacts-tags">
+                    <span>Telegram</span>
+                    <span>WhatsApp</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== ФУТЕР ===== -->
+    <footer>
+        <div class="container">
+            &copy; 2026 Алгоритм.Дело — разработка сайтов, ботов и игр.
+        </div>
+    </footer>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ТОВАРА ===== -->
+    <div class="modal-overlay" id="productModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeProductModal()">×</button>
+            <h2 id="modalTitle">Название</h2>
+            <div class="modal-price" id="modalPrice">от 0 ₽</div>
+            <div class="modal-full-desc" id="modalDesc">Описание</div>
+            <button class="btn-primary" onclick="closeProductModal(); openOrderModal();">Оставить заявку</button>
+            <p style="margin-top:12px; font-size:14px; color:#4d7a62;">Или свяжитесь с нами по телефону или почте</p>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ЗАЯВКИ ===== -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeOrderModal()">×</button>
+            <h2 style="font-size:28px;">Оставить заявку</h2>
+            <p style="color:#2b5a42; margin-bottom:20px;">Заполните форму, и мы свяжемся с вами в ближайшее время.</p>
+
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="userName">Ваше имя *</label>
+                    <input type="text" id="userName" placeholder="Иван Петров" required />
+                </div>
+                <div class="form-group">
+                    <label for="userPhone">Номер телефона *</label>
+                    <input type="tel" id="userPhone" placeholder="+7 900 123 45 67" required />
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Электронная почта</label>
+                    <input type="email" id="userEmail" placeholder="ivan@example.com" />
+                </div>
+                <div class="form-group">
+                    <label for="userService">Выберите услугу *</label>
+                    <select id="userService" required>
+                        <option value="">— выберите —</option>
+                        <option value="Telegram-бот">Telegram-бот (от 2 500 ₽)</option>
+                        <option value="Макс-бот">Макс-бот (от 3 000 ₽)</option>
+                        <option value="Landing Site">Landing Site (от 4 000 ₽)</option>
+                        <option value="Обычный сайт">Обычный сайт (от 9 990 ₽)</option>
+                        <option value="Сайт с каталогом товаров">Сайт с каталогом товаров (от 15 000 ₽)</option>
+                        <option value="Сайт с базой данных">Сайт с базой данных (от 25 000 ₽)</option>
+                        <option value="Unity (игры/симуляторы)">Unity (договорная)</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; margin-top:8px;">Отправить заявку</button>
+            </form>
+            <p id="formStatus" style="margin-top:16px; font-weight:500; text-align:center; min-height:24px;"></p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <script>
+        // ===== ДАННЫЕ ТОВАРОВ =====
+        const products = [{
+            id: 'tg',
+            name: 'Telegram-бот',
+            price: 'от 2 500 ₽',
+            short: 'Бот с приветствием, FAQ, сбором заявок в таблицу и уведомлениями.',
+            full: `Что входит: Быстрый старт. Бот с базовыми сценариями: приветствие, ответы на частые вопросы (FAQ), сбор заявок в одну таблицу (Google Sheets / CRM), уведомления администратору о новом клиенте.
+
+        Кому подойдёт: Сфера услуг, консультанты, маленькие кофейни, репетиторы, адвокаты.
+
+        Что получаете: Перестаёте отвечать на одни и те же вопросы по 100 раз. Бот забирает «холодные» заявки, пока вы спите.
+
+        Важно: Цена указана за базовый шаблон с вашим текстом и логотипом.`
+        }, {
+            id: 'maxbot',
+            name: 'Макс-бот',
+            price: 'от 3 000 ₽',
+            short: 'Многопоточные сценарии, оплата картой, база клиентов, рассылки.',
+            full: `Что входит: Многопоточные сценарии (ветвление диалога в 10+ направлений), оплата через карту внутри бота, привязка к базе данных клиентов, отправка файлов/чеков, автоматическая рассылка по сегментам.
+
+        Кому подойдёт: Онлайн-школы, интернет-магазины (с одной категорией), сети клиник, автомойки с записью по времени.
+
+        Что получаете: Полноценного «робота-продажника», который не просто отвечает, а доводит клиента до покупки и выдаёт чек, полностью разгружая вашу бухгалтерию.
+
+        Важно: Интеграция с вашей базой данных или CRM обсуждается отдельно, если выходит за рамки типового решения.`
+        }, {
+            id: 'landing',
+            name: 'Landing Site',
+            price: 'от 4 000 ₽',
+            short: 'Одностраничный сайт с высокой конверсией, метриками и адаптивом.',
+            full: `Что входит: Одностраничный сайт с чёткой структурой: проблема → решение → выгода → кнопка «Купить/Записаться». Настройка форм захвата, подключение метрик (Яндекс.Метрика), базовый SEO (заголовки и описания), адаптация под телефоны.
+
+        Кому подойдёт: Запуск нового продукта, акции, вебинары, сбор лидов на конкретную услугу (например, «Клининг квартир») без необходимости делать большой сайт.
+
+        Что получаете: Страницу, которая конвертирует 3-5% трафика в заявки. Никакой лишней информации — только суть и кнопка.
+
+        Важно: Дизайн создаётся на основе вашего фирменного стиля или подбирается по референсу.`
+        }, {
+            id: 'site',
+            name: 'Обычный сайт',
+            price: 'от 9 990 ₽',
+            short: '3–5 страниц, админка, SSL, регистрация в поисковиках.',
+            full: `Что входит: 3-5 страниц (Главная, Услуги/Товары, О компании, Контакты, Блог/Новости). Установка на ваш хостинг, бесплатный SSL-сертификат, простая админка (WordPress / ModX), чтобы вы сами могли менять тексты и картинки. Регистрация в поисковых системах.
+
+        Кому подойдёт: Строительные компании, стоматологии, юридические бюро, салоны красоты — кто не продаёт онлайн, но должен выглядеть весомо.
+
+        Что получаете: Доверие клиентов. Сайт, который не стыдно отправить партнёру вместо ссылки на «ВКонтакте».`
+        }, {
+            id: 'catalog',
+            name: 'Сайт с каталогом товаров',
+            price: 'от 15 000 ₽',
+            short: 'Умная витрина: фильтры, поиск, корзина, заказ в пару касаний.',
+            full: `Мы создаём не просто перечень товаров с картинками. Мы проектируем удобный каталог, который работает как швейцарские часы: клиент заходит, находит нужное за 2 клика, изучает характеристики и принимает решение.
+
+        Что входит: Структура без хаоса (категории, фильтры, поиск), детальные карточки товара, корзина, оформление заказа в пару касаний, адаптация под все устройства.
+
+        О подходе к заказам: Мы за осознанные покупки. В базовой версии заказ оформляется через форму — вы видите состав корзины, можете связаться с клиентом, уточнить детали. Никаких слепых списаний. Когда бизнес разрастётся — добавим онлайн-оплату и автоматическую доставку.
+
+        Ключевая фишка: каталог растёт вместе с вами. Добавляйте товары сами через простую админку.
+
+        Кому подойдёт: магазины одежды, стройматериалов, мебели, зоотоваров, локальные производства.`
+        }, {
+            id: 'db',
+            name: 'Сайт с базой данных',
+            price: 'от 25 000 ₽',
+            short: 'Личные кабинеты, отчёты, интеграции, защита от утечек.',
+            full: `Что входит: Проектирование структуры данных (таблицы, связи), личные кабинеты для пользователей с разными правами доступа (Админ, Менеджер, Клиент, Подрядчик), история действий (кто что смотрел/менял), выгрузка отчетов в Excel/CSV, интеграция с внешними API. Полная защита от SQL-инъекций и утечек.
+
+        Кому подойдёт: Логистические компании, агрегаторы услуг, сети ресторанов с поставщиками, сервисные центры, учёт оборудования, корпоративные порталы.
+
+        Что получаете: Цифровой нерв бизнеса. Не просто страницы, а инструмент управления компанией, где каждая цифра сверяется автоматически.
+
+        Важно: В цену входит разработка архитектуры БД + фронтальная часть. Бекенд-разработка обсуждается при детальном ТЗ.`
+        }, {
+            id: 'unity',
+            name: 'Unity (игры / симуляторы)',
+            price: 'Договорная',
+            short: '2D/3D игры, симуляторы, визуализация, помощь в доработке.',
+            full: `Что входит:
+        • С нуля: разработка 2D/3D игр под Windows, Android, iOS. Аркады, квесты, симуляторы тренировок, визуализация объектов (дизайн-проекты интерьеров в реальном времени).
+        • Помощь: допиливаем ваш текущий проект, оптимизируем производительность (убираем тормоза), исправляем баги, настраиваем физику и AI.
+
+        Кому подойдёт: гейм-студиям стартапам, архитекторам и дизайнерам для 3D-презентаций, производственным компаниям для обучения персонала (симуляторы станков/оборудования).
+
+        Что получаете: работающий билд (сборку), которую можно сразу установить на устройство. Берём проекты любой сырости.
+
+        Важно: так как каждый проект уникален, финальная цена определяется после 15-минутной демонстрации вашей идеи (звонок или ТЗ).`
+        }];
+
+        // ===== РЕНДЕР КАРТОЧЕК =====
+        const grid = document.getElementById('catalogGrid');
+        products.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <h3>${p.name}</h3>
+                <div class="product-price">${p.price}</div>
+                <div class="product-desc">${p.short}</div>
+                <button class="btn-primary" onclick="openProductModal('${p.id}')">Подробнее</button>
+            `;
+            grid.appendChild(card);
+        });
+
+        // ===== МОДАЛЬ ТОВАРА =====
+        function openProductModal(id) {
+            const p = products.find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('modalTitle').textContent = p.name;
+            document.getElementById('modalPrice').textContent = p.price;
+            document.getElementById('modalDesc').textContent = p.full;
+            document.getElementById('productModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ===== МОДАЛЬ ЗАЯВКИ =====
+        function openOrderModal() {
+            document.getElementById('orderModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('formStatus').textContent = '';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Закрытие по клику на оверлей
+        document.querySelectorAll('.modal-overlay').forEach(el => {
+            el.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // ===== ОТПРАВКА НА ПОЧТУ (EmailJS) =====
+        (function() {
+            emailjs.init({
+                publicKey: '2UMeMhy4aJizV6SAW'
+            });
+        })();
+
+        const form = document.getElementById('orderForm');
+        const status = document.getElementById('formStatus');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('userName').value.trim();
+            const phone = document.getElementById('userPhone').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const service = document.getElementById('userService').value;
+
+            if (!name || !phone || !service) {
+                status.style.color = '#b34a4a';
+                status.textContent = 'Заполните имя, телефон и выберите услугу.';
+                return;
+            }
+
+            status.style.color = '#2d6b4a';
+            status.textContent = 'Отправка...';
+
+            const templateParams = {
+                user_name: name,
+                user_phone: phone,
+                user_email: email || 'не указана',
+                user_service: service,
+                message: `Новая заявка с сайта Алгоритм.Дело
+
+        Имя: ${name}
+        Телефон: ${phone}
+        Почта: ${email || 'не указана'}
+        Услуга: ${service}`
+            };
+
+            emailjs.send('service_i26cluq', 'template_eahil1x', templateParams)
+                .then(() => {
+                    status.style.color = '#1f6a44';
+                    status.textContent = 'Заявка отправлена! Мы свяжемся с вами в ближайшее время.';
+                    form.reset();
+                    setTimeout(() => {
+                        closeOrderModal();
+                        status.textContent = '';
+                    }, 3000);
+                })
+                .catch((err) => {
+                    console.error('EmailJS ошибка:', err);
+                    status.style.color = '#b34a4a';
+                    status.textContent = 'Ошибка отправки. Попробуйте позже или напишите нам на почту.';
+                });
+        });
+    </script>
+
+</body>
+</html>
