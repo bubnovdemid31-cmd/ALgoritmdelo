@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Алгоритм.Дело — Услуги</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -49,51 +48,125 @@
         .product-price { font-size: 19px; font-weight: 700; color: var(--link); margin-bottom: 6px; }
         .product-desc { font-size: 13.5px; color: var(--hint); line-height: 1.45; }
 
-        .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(20, 45, 35, 0.6);
-            backdrop-filter: blur(4px);
-            display: none; align-items: flex-end; z-index: 999;
-        }
-        .modal-overlay.active { display: flex; }
-
-        .modal-sheet {
+        /* ===== Форма заявки ===== */
+        .form-section {
+            margin-top: 24px;
             background: var(--card);
-            width: 100%; max-height: 88vh; overflow-y: auto;
-            border-radius: 22px 22px 0 0;
-            padding: 22px 18px 30px;
-            animation: slideUp 0.25s ease;
+            border-radius: 18px;
+            padding: 18px 16px;
+            box-shadow: 0 2px 10px rgba(40, 80, 60, 0.04);
         }
-        @keyframes slideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        .form-section h2 {
+            font-size: 18px;
+            margin-bottom: 14px;
+            color: #0e2f24;
+        }
+        .form-group { margin-bottom: 12px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid rgba(120, 140, 130, 0.35);
+            border-radius: 12px;
+            font-size: 15px;
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--btn);
+            background: #fff;
         }
 
-        .modal-handle {
-            width: 40px; height: 4px;
-            background: rgba(120, 140, 130, 0.4);
-            border-radius: 4px; margin: 0 auto 14px;
+        .selected-service {
+            font-size: 14px;
+            padding: 10px 14px;
+            background: rgba(45, 107, 74, 0.1);
+            border-radius: 12px;
+            color: var(--link);
+            font-weight: 600;
+            margin-bottom: 14px;
         }
-        .modal-sheet h2 { font-size: 21px; margin-bottom: 6px; color: #0e2f24; }
-        .modal-price { font-size: 20px; font-weight: 700; color: var(--link); margin-bottom: 14px; }
-        .modal-full-desc { font-size: 14.5px; white-space: pre-wrap; line-height: 1.55; margin-bottom: 20px; }
-        .modal-actions { display: flex; gap: 10px; }
-        .modal-actions button {
-            flex: 1; padding: 14px; border-radius: 14px; border: none;
-            font-size: 15px; font-weight: 600; cursor: pointer;
-            font-family: inherit; transition: 0.15s;
+        .selected-service.empty {
+            color: var(--hint);
+            font-weight: 400;
+            font-style: italic;
+            background: rgba(120, 140, 130, 0.1);
         }
-        .modal-actions button:active { transform: scale(0.97); }
-        .btn-ghost { background: rgba(120, 140, 130, 0.15); color: var(--text); }
-        .btn-fill { background: var(--btn); color: var(--btn-text); box-shadow: 0 6px 18px rgba(45, 107, 74, 0.25); }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--btn);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+            box-shadow: 0 6px 20px rgba(45, 107, 74, 0.25);
+            transition: 0.15s;
+        }
+        .submit-btn:active { transform: scale(0.98); }
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         .info-block {
-            margin-top: 22px; padding: 16px;
+            margin-top: 22px;
+            padding: 16px;
             background: rgba(45, 107, 74, 0.08);
-            border-radius: 16px; font-size: 13.5px;
-            color: var(--hint); line-height: 1.5;
+            border-radius: 16px;
+            font-size: 13.5px;
+            color: var(--hint);
+            line-height: 1.5;
         }
         .info-block b { color: var(--link); }
+
+        /* ===== Попап успеха ===== */
+        .success-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: rgba(20,45,35,0.75);
+            display: none; align-items: center; justify-content: center;
+            padding: 24px;
+        }
+        .success-overlay.active { display: flex; }
+        .success-box {
+            background: #fff; border-radius: 22px;
+            padding: 28px 22px; max-width: 340px; width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,20,10,0.35);
+        }
+        .success-icon {
+            width: 64px; height: 64px; margin: 0 auto 16px;
+            background: #2d6b4a; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; color: #fff;
+        }
+        .success-box h2 {
+            font-size: 20px; color: #0e2f24;
+            margin-bottom: 8px; font-weight: 700;
+        }
+        .success-box p {
+            font-size: 14px; color: #3b5f4e;
+            line-height: 1.5; margin-bottom: 20px;
+        }
+        .success-box button {
+            width: 100%; padding: 13px; border: none;
+            background: #2d6b4a; color: #fff;
+            border-radius: 14px; font-size: 15px; font-weight: 600;
+            cursor: pointer; font-family: inherit;
+        }
     </style>
 </head>
 <body>
@@ -106,133 +179,138 @@
     <div class="section-title">Услуги</div>
     <div id="catalog"></div>
 
-    <div class="info-block">
-        💬 После нажатия «Оставить заявку» мы получим ваш <b>Telegram-профиль</b>
-        и напишем вам прямо в этот чат.
+    <!-- ФОРМА ЗАЯВКИ -->
+    <div class="form-section">
+        <h2>Оставить заявку</h2>
+
+        <div class="selected-service empty" id="selectedService">
+            Услуга не выбрана — тапните карточку выше
+        </div>
+
+        <div class="form-group">
+            <label for="userName">Ваше имя *</label>
+            <input type="text" id="userName" placeholder="Иван Петров" />
+        </div>
+
+        <div class="form-group">
+            <label for="userPhone">Номер телефона *</label>
+            <input type="tel" id="userPhone" placeholder="+7 900 123 45 67" />
+        </div>
+
+        <div class="form-group">
+            <label for="userUsername">Telegram (необязательно)</label>
+            <input type="text" id="userUsername" placeholder="@username" />
+        </div>
+
+        <button class="submit-btn" id="submitBtn" disabled>Оставить заявку</button>
     </div>
 
-    <div class="modal-overlay" id="modal">
-        <div class="modal-sheet">
-            <div class="modal-handle"></div>
-            <h2 id="modalTitle">Название</h2>
-            <div class="modal-price" id="modalPrice">от 0 ₽</div>
-            <div class="modal-full-desc" id="modalDesc">Описание</div>
-            <div class="modal-actions">
-                <button class="btn-ghost" id="modalClose">Закрыть</button>
-                <button class="btn-fill" id="modalSubmit">Оставить заявку</button>
-            </div>
+    <div class="info-block">
+        💬 Мы свяжемся с вами по указанному телефону или в Telegram.
+    </div>
+
+    <!-- ПОПАП УСПЕХА -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-box">
+            <div class="success-icon">✓</div>
+            <h2>Заявка отправлена!</h2>
+            <p>Мы свяжемся с вами в ближайшее время.</p>
+            <button id="successClose">Отлично!</button>
         </div>
     </div>
 
     <script>
-        // ===== Telegram WebApp =====
-        const tg = window.Telegram?.WebApp;
-        if (tg) {
-            tg.ready();
-            tg.expand();
-        }
-
-        // ===== НАСТРОЙКИ (уже твои) =====
+        // ===== НАСТРОЙКИ =====
         const BOT_TOKEN = "8928646520:AAEwt54ioC_bu2GdW2nBAWfYe-QT2F1XXko";
         const ADMIN_ID = "1780894759";
 
         // ===== Данные услуг =====
         const products = [
-            { id: 'tg', name: 'Telegram-бот', price: 'от 2 500 ₽', short: 'Бот с приветствием, FAQ, сбором заявок в таблицу и уведомлениями.', full: `Что входит: Быстрый старт. Бот с базовыми сценариями: приветствие, ответы на частые вопросы (FAQ), сбор заявок в одну таблицу (Google Sheets / CRM), уведомления администратору о новом клиенте.
-
-Кому подойдёт: Сфера услуг, консультанты, маленькие кофейни, репетиторы, адвокаты.
-
-Что получаете: Перестаёте отвечать на одни и те же вопросы по 100 раз. Бот забирает «холодные» заявки, пока вы спите.` },
-            { id: 'maxbot', name: 'Макс-бот', price: 'от 3 000 ₽', short: 'Многопоточные сценарии, оплата картой, база клиентов, рассылки.', full: `Что входит: Многопоточные сценарии, оплата через карту внутри бота, привязка к базе клиентов, отправка файлов/чеков, автоматическая рассылка.
-
-Кому подойдёт: Онлайн-школы, интернет-магазины, сети клиник, автомойки.
-
-Что получаете: Полноценного «робота-продажника», который доводит клиента до покупки.` },
-            { id: 'landing', name: 'Landing Site', price: 'от 4 000 ₽', short: 'Одностраничный сайт с высокой конверсией, метриками и адаптивом.', full: `Что входит: Одностраничный сайт с чёткой структурой, формами захвата, метрикой, SEO и адаптивом под телефоны.
-
-Кому подойдёт: Запуск нового продукта, акции, вебинары, сбор лидов.
-
-Что получаете: Страницу, которая конвертирует 3-5% трафика в заявки.` },
-            { id: 'site', name: 'Обычный сайт', price: 'от 9 990 ₽', short: '3–5 страниц, админка, SSL, регистрация в поисковиках.', full: `Что входит: 3-5 страниц, установка на хостинг, SSL, простая админка (WordPress / ModX), регистрация в поисковых системах.
-
-Кому подойдёт: Строительные компании, стоматологии, юридические бюро, салоны красоты.
-
-Что получаете: Доверие клиентов. Сайт, который не стыдно отправить партнёру.` },
-            { id: 'catalog', name: 'Сайт с каталогом товаров', price: 'от 15 000 ₽', short: 'Умная витрина: фильтры, поиск, корзина, заказ в пару касаний.', full: `Мы создаём удобный каталог: категории, фильтры, поиск, детальные карточки, корзина, оформление заказа.
-
-Кому подойдёт: магазины одежды, стройматериалов, мебели, зоотоваров.
-
-Ключевая фишка: каталог растёт вместе с вами через простую админку.` },
-            { id: 'db', name: 'Сайт с базой данных', price: 'от 25 000 ₽', short: 'Личные кабинеты, отчёты, интеграции, защита от утечек.', full: `Что входит: Проектирование БД, личные кабинеты с правами доступа, история действий, выгрузка в Excel/CSV, интеграция с API.
-
-Кому подойдёт: Логистика, агрегаторы, сети ресторанов, сервисные центры.
-
-Что получаете: Цифровой нерв бизнеса — инструмент управления компанией.` },
-            { id: 'unity', name: 'Unity (игры / симуляторы)', price: 'Договорная', short: '2D/3D игры, симуляторы, визуализация, помощь в доработке.', full: `Что входит:
-• С нуля: 2D/3D игры под Windows, Android, iOS.
-• Помощь: доработка вашего проекта, оптимизация, исправление багов.
-
-Кому подойдёт: гейм-студиям, архитекторам, производственным компаниям.` }
+            { id: 'tg', name: 'Telegram-бот', price: 'от 2 500 ₽', short: 'Бот с приветствием, FAQ, сбором заявок в таблицу и уведомлениями.' },
+            { id: 'maxbot', name: 'Макс-бот', price: 'от 3 000 ₽', short: 'Многопоточные сценарии, оплата картой, база клиентов, рассылки.' },
+            { id: 'landing', name: 'Landing Site', price: 'от 4 000 ₽', short: 'Одностраничный сайт с высокой конверсией, метриками и адаптивом.' },
+            { id: 'site', name: 'Обычный сайт', price: 'от 9 990 ₽', short: '3–5 страниц, админка, SSL, регистрация в поисковиках.' },
+            { id: 'catalog', name: 'Сайт с каталогом товаров', price: 'от 15 000 ₽', short: 'Умная витрина: фильтры, поиск, корзина, заказ в пару касаний.' },
+            { id: 'db', name: 'Сайт с базой данных', price: 'от 25 000 ₽', short: 'Личные кабинеты, отчёты, интеграции, защита от утечек.' },
+            { id: 'unity', name: 'Unity (игры / симуляторы)', price: 'Договорная', short: '2D/3D игры, симуляторы, визуализация, помощь в доработке.' }
         ];
+
+        // ===== Состояние =====
+        let selectedProduct = null;
 
         // ===== Рендер карточек =====
         const catalogEl = document.getElementById('catalog');
         products.forEach(p => {
             const card = document.createElement('div');
             card.className = 'product-card';
+            card.dataset.id = p.id;
             card.innerHTML = `
                 <h3>${p.name}</h3>
                 <div class="product-price">${p.price}</div>
                 <div class="product-desc">${p.short}</div>
             `;
-            card.addEventListener('click', () => openModal(p.id));
+            card.addEventListener('click', () => selectProduct(p));
             catalogEl.appendChild(card);
         });
 
-        // ===== Модалка =====
-        const modal = document.getElementById('modal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalPrice = document.getElementById('modalPrice');
-        const modalDesc = document.getElementById('modalDesc');
-        let currentProduct = null;
+        // ===== Выбор услуги =====
+        function selectProduct(p) {
+            selectedProduct = p;
 
-        function openModal(id) {
-            currentProduct = products.find(x => x.id === id);
-            if (!currentProduct) return;
-            modalTitle.textContent = currentProduct.name;
-            modalPrice.textContent = currentProduct.price;
-            modalDesc.textContent = currentProduct.full;
-            modal.classList.add('active');
+            // Подсветка
+            document.querySelectorAll('.product-card').forEach(c => {
+                c.style.borderColor = c.dataset.id === p.id ? '#2d6b4a' : 'rgba(80, 140, 110, 0.1)';
+                c.style.borderWidth = c.dataset.id === p.id ? '2px' : '1.5px';
+            });
+
+            // Надпись
+            const sel = document.getElementById('selectedService');
+            sel.textContent = `Выбрано: ${p.name} (${p.price})`;
+            sel.classList.remove('empty');
+
+            updateSubmitState();
+
+            // Скролл к форме
+            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        function closeModal() { modal.classList.remove('active'); }
 
-        document.getElementById('modalClose').addEventListener('click', closeModal);
-        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+        // ===== Поля формы =====
+        const nameInput = document.getElementById('userName');
+        const phoneInput = document.getElementById('userPhone');
+        const usernameInput = document.getElementById('userUsername');
+        const submitBtn = document.getElementById('submitBtn');
 
-        // ===== ОТПРАВКА ЗАЯВКИ (двойной способ) =====
-        document.getElementById('modalSubmit').addEventListener('click', async () => {
-            console.log("=== КНОПКА НАЖАТА ===");
-            if (!currentProduct) { alert('Выберите услугу'); return; }
+        [nameInput, phoneInput, usernameInput].forEach(el => {
+            el.addEventListener('input', updateSubmitState);
+        });
 
-            // Данные из Telegram
-            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
-            const username = tgUser?.username ? `@${tgUser.username}` : "—";
-            const fullname = tgUser
-                ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim()
-                : "Аноним";
+        function updateSubmitState() {
+            const ok = selectedProduct
+                && nameInput.value.trim().length > 0
+                && phoneInput.value.trim().length > 0;
+            submitBtn.disabled = !ok;
+        }
+
+        // ===== Отправка заявки =====
+        submitBtn.addEventListener('click', async () => {
+            if (submitBtn.disabled) return;
+
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+            const username = usernameInput.value.trim() || '—';
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Отправка...';
 
             const text =
                 `🔔 НОВАЯ ЗАЯВКА\n\n` +
-                `🛠 Услуга: ${currentProduct.name}\n` +
-                `💰 Цена: ${currentProduct.price}\n\n` +
-                `👤 ${fullname}\n` +
-                `🔗 ${username}`;
+                `🛠 Услуга: ${selectedProduct.name}\n` +
+                `💰 Цена: ${selectedProduct.price}\n\n` +
+                `👤 Имя: ${name}\n` +
+                `📞 Телефон: ${phone}\n` +
+                `💬 Telegram: ${username}`;
 
-            let sent = false;
-
-            // СПОСОБ 1: fetch напрямую (работает в браузере и Telegram)
             try {
-                console.log("Пробуем fetch...");
                 const r = await fetch(
                     `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
                     {
@@ -243,68 +321,37 @@
                 );
                 const data = await r.json();
                 console.log("Ответ Telegram:", data);
-                if (data.ok) sent = true;
-            } catch (e) {
-                console.error("fetch ошибка:", e);
-            }
 
-            // СПОСОБ 2: sendData (резерв, если fetch не сработал)
-            if (!sent && tg && tg.sendData) {
-                try {
-                    const payload = [currentProduct.id, currentProduct.name, currentProduct.price].join("|");
-                    tg.sendData(payload);
-                    console.log("sendData вызван как резерв");
-                    sent = true;
-                } catch (e) {
-                    console.error("sendData ошибка:", e);
+                if (data.ok) {
+                    document.getElementById('successOverlay').classList.add('active');
+                    // Сброс формы
+                    nameInput.value = '';
+                    phoneInput.value = '';
+                    usernameInput.value = '';
+                    selectedProduct = null;
+                    document.getElementById('selectedService').textContent = 'Услуга не выбрана — тапните карточку выше';
+                    document.getElementById('selectedService').classList.add('empty');
+                    document.querySelectorAll('.product-card').forEach(c => {
+                        c.style.borderColor = 'rgba(80, 140, 110, 0.1)';
+                        c.style.borderWidth = '1.5px';
+                    });
+                } else {
+                    alert("❌ Ошибка: " + data.description);
                 }
-            }
-
-            if (sent) {
-                showSuccessPopup();
-            } else {
-                alert("❌ Не удалось отправить. Проверьте интернет.");
+            } catch (e) {
+                console.error("Ошибка:", e);
+                alert("❌ Ошибка сети. Проверьте интернет.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Оставить заявку';
+                updateSubmitState();
             }
         });
 
-        // ===== Попап успеха =====
-        function showSuccessPopup() {
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position: fixed; inset: 0; z-index: 9999;
-                background: rgba(20,45,35,0.75);
-                display: flex; align-items: center; justify-content: center;
-                padding: 24px;
-            `;
-            overlay.innerHTML = `
-                <div style="
-                    background: #fff; border-radius: 22px;
-                    padding: 28px 22px; max-width: 340px; width: 100%;
-                    text-align: center; box-shadow: 0 20px 60px rgba(0,20,10,0.35);
-                ">
-                    <div style="
-                        width: 64px; height: 64px; margin: 0 auto 16px;
-                        background: #2d6b4a; border-radius: 50%;
-                        display: flex; align-items: center; justify-content: center;
-                        font-size: 32px; color: #fff;
-                    ">✓</div>
-                    <h2 style="font-size: 20px; color: #0e2f24; margin-bottom: 8px;">
-                        Заявка отправлена!
-                    </h2>
-                    <p style="font-size: 14px; color: #3b5f4e; line-height: 1.5; margin-bottom: 20px;">
-                        Мы свяжемся с вами в ближайшее время.
-                    </p>
-                    <button id="popupClose" style="
-                        width: 100%; padding: 13px; border: none;
-                        background: #2d6b4a; color: #fff;
-                        border-radius: 14px; font-size: 15px; font-weight: 600;
-                        cursor: pointer; font-family: inherit;
-                    ">Отлично!</button>
-                </div>
-            `;
-            document.body.appendChild(overlay);
-            document.getElementById('popupClose').onclick = () => overlay.remove();
-        }
+        // ===== Закрытие попапа =====
+        document.getElementById('successClose').onclick = () => {
+            document.getElementById('successOverlay').classList.remove('active');
+        };
     </script>
 </body>
 </html>
