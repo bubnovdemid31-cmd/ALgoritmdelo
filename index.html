@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Алгоритм.Дело — Услуги</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -48,52 +49,16 @@
         .product-price { font-size: 19px; font-weight: 700; color: var(--link); margin-bottom: 6px; }
         .product-desc { font-size: 13.5px; color: var(--hint); line-height: 1.45; }
 
-        /* ===== Форма заявки ===== */
-        .form-section {
-            margin-top: 24px;
-            background: var(--card);
-            border-radius: 18px;
-            padding: 18px 16px;
-            box-shadow: 0 2px 10px rgba(40, 80, 60, 0.04);
-        }
-        .form-section h2 {
-            font-size: 18px;
-            margin-bottom: 14px;
-            color: #0e2f24;
-        }
-        .form-group { margin-bottom: 12px; }
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: var(--text);
-        }
-        .form-group input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid rgba(120, 140, 130, 0.35);
-            border-radius: 12px;
-            font-size: 15px;
-            background: var(--bg);
-            color: var(--text);
-            font-family: inherit;
-            transition: 0.2s;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--btn);
-            background: #fff;
-        }
-
+        /* Выбранная услуга */
         .selected-service {
             font-size: 14px;
-            padding: 10px 14px;
+            padding: 12px 14px;
             background: rgba(45, 107, 74, 0.1);
             border-radius: 12px;
             color: var(--link);
             font-weight: 600;
-            margin-bottom: 14px;
+            margin: 18px 0 14px;
+            text-align: center;
         }
         .selected-service.empty {
             color: var(--hint);
@@ -102,9 +67,10 @@
             background: rgba(120, 140, 130, 0.1);
         }
 
+        /* Кнопка заявки */
         .submit-btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background: var(--btn);
             color: var(--btn-text);
             border: none;
@@ -112,14 +78,14 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 8px;
             box-shadow: 0 6px 20px rgba(45, 107, 74, 0.25);
             transition: 0.15s;
         }
         .submit-btn:active { transform: scale(0.98); }
         .submit-btn:disabled {
-            opacity: 0.5;
+            opacity: 0.4;
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         .info-block {
@@ -130,10 +96,11 @@
             font-size: 13.5px;
             color: var(--hint);
             line-height: 1.5;
+            text-align: center;
         }
         .info-block b { color: var(--link); }
 
-        /* ===== Попап успеха ===== */
+        /* Попап успеха */
         .success-overlay {
             position: fixed; inset: 0; z-index: 9999;
             background: rgba(20,45,35,0.75);
@@ -179,34 +146,14 @@
     <div class="section-title">Услуги</div>
     <div id="catalog"></div>
 
-    <!-- ФОРМА ЗАЯВКИ -->
-    <div class="form-section">
-        <h2>Оставить заявку</h2>
-
-        <div class="selected-service empty" id="selectedService">
-            Услуга не выбрана — тапните карточку выше
-        </div>
-
-        <div class="form-group">
-            <label for="userName">Ваше имя *</label>
-            <input type="text" id="userName" placeholder="Иван Петров" />
-        </div>
-
-        <div class="form-group">
-            <label for="userPhone">Номер телефона *</label>
-            <input type="tel" id="userPhone" placeholder="+7 900 123 45 67" />
-        </div>
-
-        <div class="form-group">
-            <label for="userUsername">Telegram (необязательно)</label>
-            <input type="text" id="userUsername" placeholder="@username" />
-        </div>
-
-        <button class="submit-btn" id="submitBtn" disabled>Оставить заявку</button>
+    <div class="selected-service empty" id="selectedService">
+        Услуга не выбрана — тапните карточку выше
     </div>
 
+    <button class="submit-btn" id="submitBtn" disabled>Оставить заявку</button>
+
     <div class="info-block">
-        💬 Мы свяжемся с вами по указанному телефону или в Telegram.
+        💬 Заявка отправляется напрямую. Мы свяжемся с вами в Telegram.
     </div>
 
     <!-- ПОПАП УСПЕХА -->
@@ -235,7 +182,6 @@
             { id: 'unity', name: 'Unity (игры / симуляторы)', price: 'Договорная', short: '2D/3D игры, симуляторы, визуализация, помощь в доработке.' }
         ];
 
-        // ===== Состояние =====
         let selectedProduct = null;
 
         // ===== Рендер карточек =====
@@ -254,61 +200,47 @@
         });
 
         // ===== Выбор услуги =====
+        const submitBtn = document.getElementById('submitBtn');
+        const selEl = document.getElementById('selectedService');
+
         function selectProduct(p) {
             selectedProduct = p;
 
-            // Подсветка
             document.querySelectorAll('.product-card').forEach(c => {
-                c.style.borderColor = c.dataset.id === p.id ? '#2d6b4a' : 'rgba(80, 140, 110, 0.1)';
-                c.style.borderWidth = c.dataset.id === p.id ? '2px' : '1.5px';
+                const active = c.dataset.id === p.id;
+                c.style.borderColor = active ? '#2d6b4a' : 'rgba(80, 140, 110, 0.1)';
+                c.style.borderWidth = active ? '2px' : '1.5px';
             });
 
-            // Надпись
-            const sel = document.getElementById('selectedService');
-            sel.textContent = `Выбрано: ${p.name} (${p.price})`;
-            sel.classList.remove('empty');
+            selEl.textContent = `Выбрано: ${p.name} (${p.price})`;
+            selEl.classList.remove('empty');
+            submitBtn.disabled = false;
 
-            updateSubmitState();
-
-            // Скролл к форме
-            document.querySelector('.form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        // ===== Поля формы =====
-        const nameInput = document.getElementById('userName');
-        const phoneInput = document.getElementById('userPhone');
-        const usernameInput = document.getElementById('userUsername');
-        const submitBtn = document.getElementById('submitBtn');
-
-        [nameInput, phoneInput, usernameInput].forEach(el => {
-            el.addEventListener('input', updateSubmitState);
-        });
-
-        function updateSubmitState() {
-            const ok = selectedProduct
-                && nameInput.value.trim().length > 0
-                && phoneInput.value.trim().length > 0;
-            submitBtn.disabled = !ok;
+            submitBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         // ===== Отправка заявки =====
         submitBtn.addEventListener('click', async () => {
-            if (submitBtn.disabled) return;
-
-            const name = nameInput.value.trim();
-            const phone = phoneInput.value.trim();
-            const username = usernameInput.value.trim() || '—';
+            if (!selectedProduct) return;
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Отправка...';
+
+            // Получаем данные из Telegram (если открыто в Telegram)
+            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            const username = tgUser?.username ? `@${tgUser.username}` : '—';
+            const fullname = tgUser
+                ? `${tgUser.first_name || ''} ${tgUser.last_name || ''}`.trim()
+                : '—';
+            const userId = tgUser?.id || '—';
 
             const text =
                 `🔔 НОВАЯ ЗАЯВКА\n\n` +
                 `🛠 Услуга: ${selectedProduct.name}\n` +
                 `💰 Цена: ${selectedProduct.price}\n\n` +
-                `👤 Имя: ${name}\n` +
-                `📞 Телефон: ${phone}\n` +
-                `💬 Telegram: ${username}`;
+                `👤 ${fullname}\n` +
+                `🔗 ${username}\n` +
+                `🆔 ${userId}`;
 
             try {
                 const r = await fetch(
@@ -324,13 +256,11 @@
 
                 if (data.ok) {
                     document.getElementById('successOverlay').classList.add('active');
-                    // Сброс формы
-                    nameInput.value = '';
-                    phoneInput.value = '';
-                    usernameInput.value = '';
+
+                    // Сброс
                     selectedProduct = null;
-                    document.getElementById('selectedService').textContent = 'Услуга не выбрана — тапните карточку выше';
-                    document.getElementById('selectedService').classList.add('empty');
+                    selEl.textContent = 'Услуга не выбрана — тапните карточку выше';
+                    selEl.classList.add('empty');
                     document.querySelectorAll('.product-card').forEach(c => {
                         c.style.borderColor = 'rgba(80, 140, 110, 0.1)';
                         c.style.borderWidth = '1.5px';
@@ -342,9 +272,8 @@
                 console.error("Ошибка:", e);
                 alert("❌ Ошибка сети. Проверьте интернет.");
             } finally {
-                submitBtn.disabled = false;
+                submitBtn.disabled = true; // снова выключена, пока не выберут услугу
                 submitBtn.textContent = 'Оставить заявку';
-                updateSubmitState();
             }
         });
 
