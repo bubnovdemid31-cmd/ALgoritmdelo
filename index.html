@@ -29,27 +29,10 @@
         }
 
         .header { text-align: center; margin-bottom: 20px; }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #1a4a3a;
-        }
+        .logo { font-size: 24px; font-weight: 700; color: #1a4a3a; }
         .logo span { color: var(--link); font-weight: 300; }
-
-        .subtitle {
-            font-size: 14px;
-            color: var(--hint);
-            margin-top: 4px;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin: 18px 0 12px;
-            color: #0e2f24;
-        }
+        .subtitle { font-size: 14px; color: var(--hint); margin-top: 4px; }
+        .section-title { font-size: 18px; font-weight: 700; margin: 18px 0 12px; color: #0e2f24; }
 
         .product-card {
             background: var(--card);
@@ -57,131 +40,60 @@
             padding: 16px;
             margin-bottom: 12px;
             border: 1.5px solid rgba(80, 140, 110, 0.1);
-            transition: 0.2s;
             cursor: pointer;
             box-shadow: 0 2px 10px rgba(40, 80, 60, 0.04);
+            transition: 0.2s;
         }
         .product-card:active { transform: scale(0.99); }
-
-        .product-card h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: #0e2f24;
-        }
-
-        .product-price {
-            font-size: 19px;
-            font-weight: 700;
-            color: var(--link);
-            margin-bottom: 6px;
-        }
-
-        .product-desc {
-            font-size: 13.5px;
-            color: var(--hint);
-            line-height: 1.45;
-        }
+        .product-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 4px; color: #0e2f24; }
+        .product-price { font-size: 19px; font-weight: 700; color: var(--link); margin-bottom: 6px; }
+        .product-desc { font-size: 13.5px; color: var(--hint); line-height: 1.45; }
 
         .modal-overlay {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: rgba(20, 45, 35, 0.6);
             backdrop-filter: blur(4px);
-            display: none;
-            align-items: flex-end;
-            z-index: 999;
+            display: none; align-items: flex-end; z-index: 999;
         }
         .modal-overlay.active { display: flex; }
 
         .modal-sheet {
             background: var(--card);
-            width: 100%;
-            max-height: 88vh;
-            overflow-y: auto;
+            width: 100%; max-height: 88vh; overflow-y: auto;
             border-radius: 22px 22px 0 0;
             padding: 22px 18px 30px;
             animation: slideUp 0.25s ease;
         }
-
         @keyframes slideUp {
             from { transform: translateY(100%); }
             to { transform: translateY(0); }
         }
 
         .modal-handle {
-            width: 40px;
-            height: 4px;
+            width: 40px; height: 4px;
             background: rgba(120, 140, 130, 0.4);
-            border-radius: 4px;
-            margin: 0 auto 14px;
+            border-radius: 4px; margin: 0 auto 14px;
         }
-
-        .modal-sheet h2 {
-            font-size: 21px;
-            margin-bottom: 6px;
-            color: #0e2f24;
-        }
-
-        .modal-price {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--link);
-            margin-bottom: 14px;
-        }
-
-        .modal-full-desc {
-            font-size: 14.5px;
-            white-space: pre-wrap;
-            line-height: 1.55;
-            margin-bottom: 20px;
-            color: #1e3a30;
-        }
-
+        .modal-sheet h2 { font-size: 21px; margin-bottom: 6px; color: #0e2f24; }
+        .modal-price { font-size: 20px; font-weight: 700; color: var(--link); margin-bottom: 14px; }
+        .modal-full-desc { font-size: 14.5px; white-space: pre-wrap; line-height: 1.55; margin-bottom: 20px; }
         .modal-actions { display: flex; gap: 10px; }
-
         .modal-actions button {
-            flex: 1;
-            padding: 14px;
-            border-radius: 14px;
-            border: none;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            transition: 0.15s;
+            flex: 1; padding: 14px; border-radius: 14px; border: none;
+            font-size: 15px; font-weight: 600; cursor: pointer;
+            font-family: inherit; transition: 0.15s;
         }
         .modal-actions button:active { transform: scale(0.97); }
-
-        .btn-ghost {
-            background: rgba(120, 140, 130, 0.15);
-            color: var(--text);
-        }
-        .btn-fill {
-            background: var(--btn);
-            color: var(--btn-text);
-            box-shadow: 0 6px 18px rgba(45, 107, 74, 0.25);
-        }
+        .btn-ghost { background: rgba(120, 140, 130, 0.15); color: var(--text); }
+        .btn-fill { background: var(--btn); color: var(--btn-text); box-shadow: 0 6px 18px rgba(45, 107, 74, 0.25); }
 
         .info-block {
-            margin-top: 22px;
-            padding: 16px;
+            margin-top: 22px; padding: 16px;
             background: rgba(45, 107, 74, 0.08);
-            border-radius: 16px;
-            font-size: 13.5px;
-            color: var(--hint);
-            line-height: 1.5;
+            border-radius: 16px; font-size: 13.5px;
+            color: var(--hint); line-height: 1.5;
         }
         .info-block b { color: var(--link); }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.85); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
     </style>
 </head>
 <body>
@@ -220,85 +132,47 @@
             tg.expand();
         }
 
+        // ===== НАСТРОЙКИ (уже твои) =====
+        const BOT_TOKEN = "8928646520:AAEwt54ioC_bu2GdW2nBAWfYe-QT2F1XXko";
+        const ADMIN_ID = "1780894759";
+
         // ===== Данные услуг =====
         const products = [
-            {
-                id: 'tg',
-                name: 'Telegram-бот',
-                price: 'от 2 500 ₽',
-                short: 'Бот с приветствием, FAQ, сбором заявок в таблицу и уведомлениями.',
-                full: `Что входит: Быстрый старт. Бот с базовыми сценариями: приветствие, ответы на частые вопросы (FAQ), сбор заявок в одну таблицу (Google Sheets / CRM), уведомления администратору о новом клиенте.
+            { id: 'tg', name: 'Telegram-бот', price: 'от 2 500 ₽', short: 'Бот с приветствием, FAQ, сбором заявок в таблицу и уведомлениями.', full: `Что входит: Быстрый старт. Бот с базовыми сценариями: приветствие, ответы на частые вопросы (FAQ), сбор заявок в одну таблицу (Google Sheets / CRM), уведомления администратору о новом клиенте.
 
 Кому подойдёт: Сфера услуг, консультанты, маленькие кофейни, репетиторы, адвокаты.
 
-Что получаете: Перестаёте отвечать на одни и те же вопросы по 100 раз. Бот забирает «холодные» заявки, пока вы спите.`
-            },
-            {
-                id: 'maxbot',
-                name: 'Макс-бот',
-                price: 'от 3 000 ₽',
-                short: 'Многопоточные сценарии, оплата картой, база клиентов, рассылки.',
-                full: `Что входит: Многопоточные сценарии, оплата через карту внутри бота, привязка к базе клиентов, отправка файлов/чеков, автоматическая рассылка.
+Что получаете: Перестаёте отвечать на одни и те же вопросы по 100 раз. Бот забирает «холодные» заявки, пока вы спите.` },
+            { id: 'maxbot', name: 'Макс-бот', price: 'от 3 000 ₽', short: 'Многопоточные сценарии, оплата картой, база клиентов, рассылки.', full: `Что входит: Многопоточные сценарии, оплата через карту внутри бота, привязка к базе клиентов, отправка файлов/чеков, автоматическая рассылка.
 
 Кому подойдёт: Онлайн-школы, интернет-магазины, сети клиник, автомойки.
 
-Что получаете: Полноценного «робота-продажника», который доводит клиента до покупки.`
-            },
-            {
-                id: 'landing',
-                name: 'Landing Site',
-                price: 'от 4 000 ₽',
-                short: 'Одностраничный сайт с высокой конверсией, метриками и адаптивом.',
-                full: `Что входит: Одностраничный сайт с чёткой структурой, формами захвата, метрикой, SEO и адаптивом под телефоны.
+Что получаете: Полноценного «робота-продажника», который доводит клиента до покупки.` },
+            { id: 'landing', name: 'Landing Site', price: 'от 4 000 ₽', short: 'Одностраничный сайт с высокой конверсией, метриками и адаптивом.', full: `Что входит: Одностраничный сайт с чёткой структурой, формами захвата, метрикой, SEO и адаптивом под телефоны.
 
 Кому подойдёт: Запуск нового продукта, акции, вебинары, сбор лидов.
 
-Что получаете: Страницу, которая конвертирует 3-5% трафика в заявки.`
-            },
-            {
-                id: 'site',
-                name: 'Обычный сайт',
-                price: 'от 9 990 ₽',
-                short: '3–5 страниц, админка, SSL, регистрация в поисковиках.',
-                full: `Что входит: 3-5 страниц, установка на хостинг, SSL, простая админка (WordPress / ModX), регистрация в поисковых системах.
+Что получаете: Страницу, которая конвертирует 3-5% трафика в заявки.` },
+            { id: 'site', name: 'Обычный сайт', price: 'от 9 990 ₽', short: '3–5 страниц, админка, SSL, регистрация в поисковиках.', full: `Что входит: 3-5 страниц, установка на хостинг, SSL, простая админка (WordPress / ModX), регистрация в поисковых системах.
 
 Кому подойдёт: Строительные компании, стоматологии, юридические бюро, салоны красоты.
 
-Что получаете: Доверие клиентов. Сайт, который не стыдно отправить партнёру.`
-            },
-            {
-                id: 'catalog',
-                name: 'Сайт с каталогом товаров',
-                price: 'от 15 000 ₽',
-                short: 'Умная витрина: фильтры, поиск, корзина, заказ в пару касаний.',
-                full: `Мы создаём удобный каталог: категории, фильтры, поиск, детальные карточки, корзина, оформление заказа.
+Что получаете: Доверие клиентов. Сайт, который не стыдно отправить партнёру.` },
+            { id: 'catalog', name: 'Сайт с каталогом товаров', price: 'от 15 000 ₽', short: 'Умная витрина: фильтры, поиск, корзина, заказ в пару касаний.', full: `Мы создаём удобный каталог: категории, фильтры, поиск, детальные карточки, корзина, оформление заказа.
 
 Кому подойдёт: магазины одежды, стройматериалов, мебели, зоотоваров.
 
-Ключевая фишка: каталог растёт вместе с вами через простую админку.`
-            },
-            {
-                id: 'db',
-                name: 'Сайт с базой данных',
-                price: 'от 25 000 ₽',
-                short: 'Личные кабинеты, отчёты, интеграции, защита от утечек.',
-                full: `Что входит: Проектирование БД, личные кабинеты с правами доступа, история действий, выгрузка в Excel/CSV, интеграция с API.
+Ключевая фишка: каталог растёт вместе с вами через простую админку.` },
+            { id: 'db', name: 'Сайт с базой данных', price: 'от 25 000 ₽', short: 'Личные кабинеты, отчёты, интеграции, защита от утечек.', full: `Что входит: Проектирование БД, личные кабинеты с правами доступа, история действий, выгрузка в Excel/CSV, интеграция с API.
 
 Кому подойдёт: Логистика, агрегаторы, сети ресторанов, сервисные центры.
 
-Что получаете: Цифровой нерв бизнеса — инструмент управления компанией.`
-            },
-            {
-                id: 'unity',
-                name: 'Unity (игры / симуляторы)',
-                price: 'Договорная',
-                short: '2D/3D игры, симуляторы, визуализация, помощь в доработке.',
-                full: `Что входит:
+Что получаете: Цифровой нерв бизнеса — инструмент управления компанией.` },
+            { id: 'unity', name: 'Unity (игры / симуляторы)', price: 'Договорная', short: '2D/3D игры, симуляторы, визуализация, помощь в доработке.', full: `Что входит:
 • С нуля: 2D/3D игры под Windows, Android, iOS.
 • Помощь: доработка вашего проекта, оптимизация, исправление багов.
 
-Кому подойдёт: гейм-студиям, архитекторам, производственным компаниям.`
-            }
+Кому подойдёт: гейм-студиям, архитекторам, производственным компаниям.` }
         ];
 
         // ===== Рендер карточек =====
@@ -330,30 +204,17 @@
             modalDesc.textContent = currentProduct.full;
             modal.classList.add('active');
         }
-
-        function closeModal() {
-            modal.classList.remove('active');
-        }
+        function closeModal() { modal.classList.remove('active'); }
 
         document.getElementById('modalClose').addEventListener('click', closeModal);
-        modal.addEventListener('click', e => {
-            if (e.target === modal) closeModal();
-        });
+        modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-        // ===== ОТПРАВКА ЗАЯВКИ (через прямой HTTP к Telegram API) =====
+        // ===== ОТПРАВКА ЗАЯВКИ (двойной способ) =====
         document.getElementById('modalSubmit').addEventListener('click', async () => {
             console.log("=== КНОПКА НАЖАТА ===");
+            if (!currentProduct) { alert('Выберите услугу'); return; }
 
-            if (!currentProduct) {
-                alert('Выберите услугу');
-                return;
-            }
-
-            // ⚠️ ЗДЕСЬ ТВОИ ДАННЫЕ (уже вписаны)
-            const BOT_TOKEN = "8928646520:AAEwt54ioC_bu2GdW2nBAWfYe-QT2F1XXko";
-            const ADMIN_ID = "1780894759";
-
-            // Берём данные из Telegram, если есть
+            // Данные из Telegram
             const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
             const username = tgUser?.username ? `@${tgUser.username}` : "—";
             const fullname = tgUser
@@ -367,32 +228,42 @@
                 `👤 ${fullname}\n` +
                 `🔗 ${username}`;
 
-            console.log("Отправляем в Telegram:", text);
+            let sent = false;
 
+            // СПОСОБ 1: fetch напрямую (работает в браузере и Telegram)
             try {
-                const response = await fetch(
+                console.log("Пробуем fetch...");
+                const r = await fetch(
                     `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
                     {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: ADMIN_ID,
-                            text: text
-                        })
+                        body: JSON.stringify({ chat_id: ADMIN_ID, text: text })
                     }
                 );
-
-                const data = await response.json();
+                const data = await r.json();
                 console.log("Ответ Telegram:", data);
-
-                if (data.ok) {
-                    showSuccessPopup();
-                } else {
-                    alert("❌ Ошибка Telegram: " + data.description);
-                }
+                if (data.ok) sent = true;
             } catch (e) {
-                console.error("Ошибка сети:", e);
-                alert("❌ Ошибка сети: " + e.message);
+                console.error("fetch ошибка:", e);
+            }
+
+            // СПОСОБ 2: sendData (резерв, если fetch не сработал)
+            if (!sent && tg && tg.sendData) {
+                try {
+                    const payload = [currentProduct.id, currentProduct.name, currentProduct.price].join("|");
+                    tg.sendData(payload);
+                    console.log("sendData вызван как резерв");
+                    sent = true;
+                } catch (e) {
+                    console.error("sendData ошибка:", e);
+                }
+            }
+
+            if (sent) {
+                showSuccessPopup();
+            } else {
+                alert("❌ Не удалось отправить. Проверьте интернет.");
             }
         });
 
